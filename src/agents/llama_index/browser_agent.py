@@ -6,7 +6,7 @@ from llama_index.tools.duckduckgo import DuckDuckGoSearchToolSpec
 from llama_index.core.tools import FunctionTool
 from pydantic import Field
 
-from v1.src.tools.browser_tool import BrowserTool
+from src.tools.llama_index.browser_tool import BrowserTool
 import asyncio
 
 

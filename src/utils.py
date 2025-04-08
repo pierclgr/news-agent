@@ -8,13 +8,13 @@ def to_camel_case(snake_str):
     return ''.join(x.title() for x in components)
 
 
-def import_agent_class(agent_name):
+def import_agent_class(agent_name, agent_library: str = "llama_index"):
     """Import a class from a module based on camel case conversion of module name."""
     # Convert agent_name to CamelCase for the class name
     class_name = to_camel_case(agent_name)
 
     # Construct the module path
-    module_path = f"src.agents.{agent_name}"
+    module_path = f"src.agents.{agent_library}.{agent_name}"
 
     # Import the module dynamically
     module = importlib.import_module(module_path)

@@ -1,7 +1,7 @@
-from v1.src.agents.articles_multi_agent import ArticlesMultiAgent
-from v1.src.config import Config
-from v1.src.tools.articles_database import ArticlesDatabase
-from v1.src.tools.news_retriever import NewsRetriever
+from src.agents.llama_index.articles_multi_agent import ArticlesMultiAgent
+from src.config import Config
+from src.tools.articles_database import ArticlesDatabase
+from src.tools.news_retriever import NewsRetriever
 
 if __name__ == "__main__":
     config = Config("config/config.json")
