@@ -5,8 +5,8 @@ import nltk
 import ssl
 from playwright.sync_api import sync_playwright
 import re
-from src.tools.articles_database import ArticlesDatabase
-from src.config import Config
+from v1.src.tools.articles_database import ArticlesDatabase
+from v1.src.config import Config
 
 
 class NewsRetriever:

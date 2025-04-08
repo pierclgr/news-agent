@@ -6,10 +6,10 @@ from typing import List, Any
 from llama_index.core.tools import FunctionTool
 from llama_index.llms.lmstudio import LMStudio
 
-from src.config import Config
-from src.tools.articles_database import ArticlesDatabase
+from v1.src.config import Config
+from v1.src.tools.articles_database import ArticlesDatabase
 from datetime import datetime
-from src.utils import import_agent_class, to_camel_case, get_printable_articles_list
+from v1.src.utils import import_agent_class, to_camel_case, get_printable_articles_list
 from llama_index.core.agent.workflow import AgentWorkflow, AgentOutput, ToolCallResult, ToolCall, ReActAgent
 
 
