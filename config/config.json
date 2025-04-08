@@ -1,0 +1,98 @@
+{
+  "search": {
+    "timeout": 60000,
+    "wait_time": 500,
+    "web": {
+      "sites": [
+        "https://deepmind.google/discover/blog/",
+        "https://www.anthropic.com/news",
+        "https://openai.com/news/",
+        "https://research.google/blog/",
+        "https://huggingface.co/blog",
+        "https://www.theverge.com/ai-artificial-intelligence",
+        "https://www.wired.com/search/?q=artificial+intelligence&sort=publishdate+desc",
+        "https://venturebeat.com/category/ai/",
+        "https://techcrunch.com/category/artificial-intelligence/",
+        "https://aibusiness.com",
+        "https://arxiv.org/list/cs.AI/recent",
+        "https://www.ilpost.it/tag/intelligenza-artificiale/",
+        "https://mistral.ai/news",
+        "https://www.perplexity.ai/hub",
+        "https://x.ai/company",
+        "https://ai.meta.com/blog/"
+      ]
+    },
+    "max_articles_per_site": 20
+  },
+  "agents": [
+    {
+      "model": "qwen2.5-14b-instruct-mlx",
+      "timeout": 120,
+      "api_base": "http://localhost:1234/v1",
+      "verbose": true,
+      "manager": true,
+      "name": "root_agent",
+      "description": "The root agent that coordinates the other agents. It has the ability and the responsibility to answer the questions of the user directly or otherwise, if help is needed, to delegate and handoff the task to other agents. You can handoff to RetrieverAgent and BrowserAgent.",
+      "system_prompt": "You are a helpful assistant that coordinates the other agents. When the user asks for something, you can answer the question directly if you know the answer and don't need the help of additional agents, otherwise you will delegate the task and hand it off to either the BrowserAgent or the RetrieverAgent.",
+      "can_handoff_to": [
+        "BrowserAgent",
+        "RetrieverAgent"
+      ]
+    },
+    {
+      "model": "qwen2.5-14b-instruct-mlx",
+      "timeout": 120,
+      "api_base": "http://localhost:1234/v1",
+      "name": "browser_agent",
+      "description": "A research agent that searches the web using DuckDuckGo and visits specific URL to then scrape and extract the content. It must not exceed 2 searches total, and must avoid repeating the same query. The user will input a query or a prompt specifying what content to search or what URL to visit and the type of information to extract from the results. Once sufficient information is collected, it should hand off to the WriteAgent.",
+      "system_prompt": "You are the BrowserAgent, a research agent that has the capabilities to search the web or visit a specific URL to then scrape and extract the content. Your goal is to gather the information requested by the user from the web or from the specified URL. Only perform at most 2 distinct searches. If you have enough info or have reached 2 searches, handoff to the next agent. Avoid infinite loops!",
+      "verbose":  false,
+      "can_handoff_to": [
+        "WriteAgent"
+      ],
+      "agentql_api_key": "YOUR-AGENTQL-API-KEY"
+    },
+    {
+      "model": "qwen2.5-14b-instruct-mlx",
+      "timeout": 120,
+      "api_base": "http://localhost:1234/v1",
+      "name": "retriever_agent",
+      "description": "A research agent that searches and retrieves documents and extract information from a knowledge base. It must not exceed 2 searches total, and must avoid repeating the same query. The user will input a query or a prompt specifying what document/documents and information to look for. Once sufficient information is collected, it should hand off to the WriteAgent.",
+      "system_prompt": "You are the RetrieverAgent, a research agent that has the capabilities to search and retrieve documents and extract information from a knowledge base. Your goal is to gather the information requested by the user from the documents in the knowledge base. Only perform at most 2 distinct searches. If you have enough info or have reached 2 searches, handoff to the next agent. Avoid infinite loops!",
+      "verbose":  false,
+      "tokenizer_embedding_model": "BAAI/bge-small-en-v1.5",
+      "chunk_size": 1024,
+      "chunk_overlap": 200,
+      "docs_folder": "./data/docs",
+      "can_handoff_to": [
+        "WriteAgent"
+      ]
+    },
+    {
+      "model": "qwen2.5-14b-instruct-mlx",
+      "timeout": 120,
+      "api_base": "http://localhost:1234/v1",
+      "name": "write_agent",
+      "description": "Writes a textual report based on the research notes, then hands off to the ReviewAgent for feedback.",
+      "system_prompt": "You are the WriteAgent. Draft a structured textual report based on the notes. After writing, hand off to the ReviewAgent.",
+      "verbose":  false,
+      "can_handoff_to": [
+        "BrowserAgent",
+        "RetrieverAgent",
+        "ReviewAgent"
+      ]
+    },
+    {
+      "model": "qwen2.5-14b-instruct-mlx",
+      "timeout": 120,
+      "api_base": "http://localhost:1234/v1",
+      "name": "review_agent",
+      "description": "Reviews the final report for correctness. Approves or requests changes.",
+      "system_prompt": "You are the ReviewAgent. Read the report, provide feedback, and either approve or request revisions. If revisions are needed, handoff to WriteAgent.",
+      "verbose":  false,
+      "can_handoff_to": [
+        "WriteAgent"
+      ]
+    }
+  ]
+}
